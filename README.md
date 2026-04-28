@@ -1,128 +1,127 @@
-# Reinforcement Learning for Speed Profile Following
+<!-- SHOWCASE: false -->
 
-This repository contains code for training and evaluating reinforcement learning agents to follow speed profiles. The project compares different RL algorithms and hyperparameters to find the optimal configuration for a speed-following control task.
+# Reinforcement Learning Exercise
 
-## Getting Started
+> Trains and evaluates RL agents to follow a synthetic speed profile, comparing algorithms and hyperparameters using stable-baselines3 and custom Gymnasium environments.
 
-### Clone the Repository
+![Status](https://img.shields.io/badge/status-complete-brightgreen)
+![Language](https://img.shields.io/badge/language-Python-blue)
+![Semester](https://img.shields.io/badge/semester-Spring%202025-orange)
 
-```bash
-git clone https://github.com/alexneilgreen/Reinforcement-Learning-Exercise.git
-cd Reinforcement-Learning-Exercise
+---
+
+## Course Information
+
+| Field                  | Details                                                                                                                                                                                                                                       |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Course Title           | Special Topics: Artificial Intelligence for Autonomous Systems                                                                                                                                                                                |
+| Course Number          | EEL 6938                                                                                                                                                                                                                                      |
+| Semester               | Spring 2025                                                                                                                                                                                                                                   |
+| Assignment Title       | Reinforcement Learning Exercise 1                                                                                                                                                                                                             |
+| Assignment Description | Modify a provided RL training script to support multiple algorithms, reward functions, and hyperparameters, then systematically experiment across configurations to identify the optimal setup for a continuous speed-following control task. |
+
+---
+
+## Project Description
+
+This project implements a reinforcement learning pipeline for a speed-profile-following control task using custom Gymnasium environments and the stable-baselines3 library. A 1200-step synthetic speed dataset is generated and split into episodic training chunks, with agents trained to minimize speed error via continuous acceleration commands. Eight hyperparameter categories are investigated through automated experimentation, including algorithm type (SAC, PPO, TD3, DDPG), batch size, chunk size, learning rate, gamma, entropy coefficient, network architecture, and reward function. Results are evaluated using MAE, MSE, RMSE, and 95th-percentile error, with PPO + squared error reward emerging as the optimal configuration.
+
+---
+
+## Screenshots / Demo
+
+> _No screenshot available. Add one with: `![Demo](docs/your-image.png)`_
+
+---
+
+## Results
+
+When run correctly, the program produces per-experiment output directories containing trained model files, test result CSVs, performance metric CSVs, and six visualization plots. A final summary report is generated when running all experiments. Sample terminal output during a training run looks like:
+
+```
+Training SAC model with chunk_size=100, lr=3e-4, batch=256 ...
+Saving model to ./logs_algorithm/SAC/model.zip
+Testing model over 1200 steps ...
+MAE: 2.1546 | MSE: 7.5267 | RMSE: 2.7435 | 95th Pct: 5.4924
+Results saved to ./logs_algorithm/SAC/test_results.csv
 ```
 
-### Install Dependencies
+The six plots generated per experiment are: speed tracking (reference vs. predicted), absolute error over time, squared error over time, control action (acceleration), error histogram, and a combined summary plot. Lower MAE, MSE, and RMSE values indicate better tracking. The best overall configuration identified was PPO with batch size 64, chunk size 50, learning rate 1e-5, gamma 0.9, entropy coefficient 0.1, small network architecture (64, 64), and squared error reward. If results appear poor, check the `--timesteps` value (default 100,000) and consider increasing it, or verify GPU availability for faster training.
 
-Install the required packages:
+---
+
+## Key Concepts
+
+`reinforcement-learning` `proximal-policy-optimization` `soft-actor-critic` `gymnasium` `stable-baselines3` `hyperparameter-tuning` `reward-shaping` `continuous-control` `speed-profile-tracking` `MAE` `MSE` `RMSE`
+
+---
+
+## Languages & Tools
+
+- **Language:** Python 3
+- **Framework/SDK:** stable-baselines3, Gymnasium, PyTorch
+- **Hardware:** GPU-accelerated training supported (CUDA); falls back to CPU automatically
+- **Build System:** pip / requirements.txt
+
+---
+
+## File Structure
+
+```
+Reinforcement-Learning-Exercise/
+├── Main.py                  # Experiment runner: automates hyperparameter sweeps and compiles final results
+├── RL_assignment.py         # Core RL environment, training logic, evaluation, and visualizations
+├── speed_profile.csv        # Auto-generated 1200-step synthetic speed dataset
+├── requirements.txt         # Python dependencies
+├── logs_*/                  # Per-experiment output directories (models, CSVs, plots)
+├── comparative_results_*/   # Cross-configuration comparison plots and metrics
+└── final_report/            # Summary visualizations produced when running all experiments
+```
+
+---
+
+## Installation & Usage
+
+### Prerequisites
+
+- Python 3.8 or later
+- pip
+
+### Setup
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/alexneilgreen/UCF-AIAutonomousSystems-RLExercise.git
+cd UCF-AIAutonomousSystems-RLExercise
+
+# 2. Install dependencies
 pip install -r requirements.txt
-```
 
-The main dependencies include:
-
-- numpy
-- pandas
-- matplotlib
-- gymnasium
-- stable-baselines3
-- tensorboard
-- torch
-
-## Usage
-
-### Running Experiments
-
-The main script `Main.py` can be used to run a variety of experiments with different hyperparameters. The script manages training, testing, and evaluation of models automatically.
-
-#### Basic Usage
-
-To run all experiments with default settings:
-
-```bash
+# 3. Run all experiments (default 100,000 timesteps)
 python Main.py
-```
 
-#### Specific Experiments
-
-You can run specific experiments by specifying the experiment type and number of timesteps:
-
-```bash
-# Run only learning rate experiments
-python Main.py --experiment learning_rate --timesteps 100000
-
-# Run only batch size experiments
-python Main.py --experiment batch_size --timesteps 50000
-```
-
-#### Available Experiment Types
-
-- `learning_rate`: Tests different learning rates
-- `batch_size`: Tests different batch sizes
-- `chunk_size`: Tests different episode lengths
-- `reward`: Tests different reward functions
-- `algorithm`: Tests different RL algorithms (SAC, PPO, TD3, DDPG)
-- `network_arch`: Tests different neural network architectures
-- `gamma`: Tests different discount factors
-- `ent_coef`: Tests different entropy coefficients
-
-#### Command Line Arguments
-
-- `--experiment`: Type of experiment to run (`all`, `learning_rate`, `batch_size`, etc.)
-- `--timesteps`: Total timesteps for training (default: 100000)
-
-### Understanding Results
-
-After running experiments, results are stored in the following directories:
-
-- Individual experiment results: `./logs_*` directories
-- Comparative results: `./comparative_results_*` directories
-- Final report (when running all experiments): `./final_report`
-
-Each experiment directory contains:
-
-- Trained model files (`.zip`)
-- Test results (`.csv`)
-- Performance metrics (`.csv`)
-- Visualization plots (`.png`)
-
-## Project Structure
-
-- `Main.py`: Main script for running experiments and comparing results
-- `RL_assignment.py`: Core implementation of RL environments and training logic
-- `speed_profile.csv`: Generated speed profile data for training and testing
-
-## Example Commands
-
-```bash
-# Run all experiments with 200,000 timesteps
-python Main.py --experiment all --timesteps 200000
-
-# Run only algorithm comparison with 100,000 timesteps
+# Or run a specific experiment type
 python Main.py --experiment algorithm --timesteps 100000
-
-# Run only reward function experiments (Default Timesteps 100,000)
-python Main.py --experiment reward
 ```
 
-## Visualizations
+### Controls
 
-The experiments generate several visualizations to help understand model performance:
+| Argument                     | Action                                                    |
+| ---------------------------- | --------------------------------------------------------- |
+| `--experiment all`           | Run all hyperparameter experiment categories sequentially |
+| `--experiment learning_rate` | Run only learning rate experiments                        |
+| `--experiment batch_size`    | Run only batch size experiments                           |
+| `--experiment chunk_size`    | Run only chunk size experiments                           |
+| `--experiment reward`        | Run only reward function experiments                      |
+| `--experiment algorithm`     | Run only algorithm comparison experiments                 |
+| `--experiment network_arch`  | Run only network architecture experiments                 |
+| `--experiment gamma`         | Run only discount factor experiments                      |
+| `--experiment ent_coef`      | Run only entropy coefficient experiments                  |
+| `--timesteps N`              | Set total training timesteps per run (default: 100000)    |
 
-1. Speed tracking plot: Shows how well the agent follows the reference speed
-2. Error plot: Shows absolute error over time
-3. Squared error plot: Shows squared error over time
-4. Action plot: Shows control actions taken by the agent
-5. Error histogram: Shows the distribution of errors
-6. Combined visualization: Combines speed tracking, errors, and actions in one plot
+---
 
-Additional comparative visualizations can be found in the associated `./comparative_results_*` directories.
+## Academic Integrity
 
-The final report directory (`./final_report`) also has a few final summary visualizations.
-
-## Notes
-
-- The code first generates a synthetic speed profile with 1200 steps
-- For training, the data is split into chunks of specified size
-- For testing, the agent runs through the entire 1200-step profile
-- Performance is measured using MAE, MSE, RMSE, and percentile metrics
+This repository is publicly available for **portfolio and reference purposes only**.
+Please do not submit any part of this work as your own for academic coursework.
