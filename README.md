@@ -1,6 +1,6 @@
 <!-- SHOWCASE: false -->
 
-# Reinforcement Learning Exercise
+# Reinforcement Learning Exercise: Deep RL Hyperparameter Study
 
 > Trains and evaluates RL agents to follow a synthetic speed profile, comparing algorithms and hyperparameters using stable-baselines3 and custom Gymnasium environments.
 
