@@ -91,8 +91,8 @@ Reinforcement-Learning-Exercise/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/alexneilgreen/UCF-AIAutonomousSystems-RLExercise1.git
-cd UCF-AIAutonomousSystems-RLExercise1
+git clone https://github.com/alexneilgreen/UCF-AIforAutonomousSystems-RLExercise1.git
+cd UCF-AIforAutonomousSystems-RLExercise1
 
 # 2. Install dependencies
 pip install -r requirements.txt
